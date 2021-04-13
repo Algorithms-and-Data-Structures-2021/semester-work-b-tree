@@ -1,11 +1,7 @@
 # Сбалансированное дерево поиска B-Tree
 
-[![CMake](https://github.com/Algorithms-and-Data-Structures-2021/semester-work-template/actions/workflows/cmake.yml/badge.svg)](https://github.com/Algorithms-and-Data-Structures-2021/semester-work-template/actions/workflows/cmake.yml)
+[![CMake](https://github.com/Algorithms-and-Data-Structures-2021/semester-work-b-tree/actions/workflows/cmake.yml/badge.svg)](https://github.com/Algorithms-and-Data-Structures-2021/semester-work-b-tree/actions/workflows/cmake.yml)
 
-
-**_Измените status badge сверху для отображения статуса сборки вашего проекта._**
-
-`Actions > CMake > ... > Create status badge`
 
 
 - В проекте реализуется структура данных B-Tree
@@ -32,9 +28,9 @@ _Заполните таблицу с указанием вклада каждо
 
 ## Структура проекта
 
-_Описание основных частей семестрового проекта._
 
-**Пример**. Проект состоит из следующих частей:
+
+Проект состоит из следующих частей:
 
 - [`src`](src)/[`include`](include) - реализация структуры данных (исходный код и заголовочные файлы);
 - [`benchmark`](benchmark) - контрольные тесты производительности структуры данных (операции добавления, удаления,
