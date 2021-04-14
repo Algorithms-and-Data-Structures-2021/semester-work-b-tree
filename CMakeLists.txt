@@ -35,7 +35,7 @@ target_compile_definitions(project_paths INTERFACE
 
 add_library(${PROJECT_NAME} STATIC
         src/data_structure.cpp
-        include/data_structure.hpp src/BNode.cpp include/BNode.hpp src/BTree.cpp include/BTree.hpp)
+        include/data_structure.hpp src/b-node.cpp include/b-node.hpp src/tree.cpp include/tree.hpp)
 
 # включить предупреждения компилятора для библиотеки (линковка)
 target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings)

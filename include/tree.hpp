@@ -5,10 +5,9 @@
 #ifndef SEMESTER_WORK_B_TREE_BTREE_HPP
 #define SEMESTER_WORK_B_TREE_BTREE_HPP
 
+#include "b-node.hpp"
 
-#include "BNode.hpp"
-
-class BTree {
+struct BTree {
  private:
   BNode *root;
 
@@ -34,7 +33,6 @@ class BTree {
 
   void repair(BNode *node);
 
-
  public:
   BTree();
 
@@ -45,8 +43,6 @@ class BTree {
   void search(int key);
 
   void remove(int key);
-
 };
 
-
-#endif //SEMESTER_WORK_B_TREE_BTREE_HPP
+#endif  //SEMESTER_WORK_B_TREE_BTREE_HPP

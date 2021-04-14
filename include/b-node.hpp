@@ -15,5 +15,4 @@ struct BNode {
   bool leaf;
 };
 
-
-#endif //SEMESTER_WORK_B_TREE_BNODE_HPP
+#endif  //SEMESTER_WORK_B_TREE_BNODE_HPP
