@@ -182,3 +182,5 @@ _Опишите, как запустить контрольные тесты, ч
 https://en.wikipedia.org/wiki/B-tree
 
 https://habr.com/ru/post/337594/
+
+https://habr.com/ru/post/114154/
