@@ -40,7 +40,7 @@ struct BTree {
 
   void insert(int key);
 
-  void search(int key);
+  bool search(int key);
 
   void remove(int key);
 };

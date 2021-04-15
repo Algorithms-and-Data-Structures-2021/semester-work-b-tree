@@ -117,7 +117,9 @@ void BTree::insert(int key) {
 }
 
 //TODO search
-void BTree::search(int key) {}
+bool BTree::search(int key) {
+
+}
 
 //TODO remove
 void BTree::remove(int key) {}
