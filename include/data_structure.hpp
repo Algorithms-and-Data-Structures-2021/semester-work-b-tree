@@ -2,108 +2,97 @@
 
 #include <utility>
 #include <unordered_set>
-//TODO удалить когда разберемся
-//TODO удалить когда разберемся
-//TODO удалить когда разберемся
-//TODO удалить когда разберемся
-
-// Заголовочный файл с объявлением структуры данных
-
 namespace itis {
 
 #define NULL 0
 #define SEARCH_KEY_NOT_FOUND 's'
 #define REMOVE_KEY_NOT_FOUND 'r'
 
-  // struct for representing nodes of a b tree
+  // Структура для узлов в нашем дереве
   template<typename T>
   struct BNode {
-    BNode<T> **child;  // Array of pointers to children.
-    T *key;            // Array of keys.
-    unsigned size;     // Number of keys.
-    bool leaf;         // Whether the node is a leaf.
+    BNode<T> **child;  // Массив указателей на детей
+    T *key;            // Массив ключей
+    unsigned size;     // Количество ключей
+    bool leaf;         // Является ли узел листом
   };
 
   typedef char BTREE_EXCEPTION;
 
-  // class for representing b trees.
   template<typename T>
   class BTree {
    public:
-    // Constructor
-    // First parameter is the minimum degree of the tree.
-    // Second parameter is the tree's key-comparison function.
-    // Third parameter is a function that prints keys.
-    // Constant time.
+    // Конструктор
+    // Первый параметр - минимальная степень дерева
+    // Второй - функция сравнения ключей
+    // Третий - функция, которая принтит ключи
+    // Сложность O(1)
     BTree(unsigned, bool (*)(T, T), void (*)(T) = NULL);
 
-    // Destructor.
-    // Linear time.
+    // Деструктор
+    // Сложность O(n)
     ~BTree<T>();
 
-    // Inserts a key into the tree.
-    // Logorithmic time.
+    // Вставка ключа в дерево
+    // Сложность O(log n)
     void insert(T);
 
-    // Removes a key from the tree.
-    // Throws a BTREE_EXCEPTION if no item was found to remove.
-    // Logorithmic time.
+    // Убирает ключ из дерева
+    // Бросает ошибку BTREE_EXCEPTION если не найден объект, который надо удалить
+    // Сложность O(log n)
     T remove(T);
 
-    // Function to find a key in the tree.
-    // returnValue.first is the node the item is in.
-    // returnValue.second is the correct index in that node's key array
-    // Logorithmic time.
+    // Функция поиска ключа в дереве
+    // Сложность O(log n)
     std::pair<BNode<T> *, unsigned> search(T);
 
-    // Uses search but just returns the key rather than the whole node.
-    // Useful when T is a key value pair and lessThan only looks at the key.
-    // Throws a BTREE_EXCEPTION if no item matching the parameter is found
-    // Logorithmic time.
+    // Использует поиск, но выводит только ключ
+    // Бросает ошибку BTREE_EXCEPTION если не найден нужный объект
+    // Сложность O(log n)
     T searchKey(T);
 
-    // Prints the tree.
-    // Linear time
+    // Принт
+    // Сложность O(n)
     void print();
 
    private:
-    // Used for initializing nodes.
+    // Нужна для инициализации узлов
     void initializeNode(BNode<T> *);
 
-    // Recursive function called by destructor.
+    // Рекурсивная функция, используемая деструктором
     void freeNode(BNode<T> *);
 
-    // Finds the index of a key in a node.
+    // Находит индекс ключа в узле
     unsigned findIndex(BNode<T> *, T);
 
-    // Inserts a key into a node.
+    // Добавляет ключ в узел
     unsigned nodeInsert(BNode<T> *, T);
 
-    // Deletes the key at a given index from a node.
+    // Удаляет ключ по указанному индексу
     T nodeDelete(BNode<T> *, unsigned);
 
-    // Function for splitting nodes that are too full.
+    // Функция для разделения заполненных узлов
     void splitChild(BNode<T> *, int);
 
-    // Merges two children of a node at a given index into one child.
+    // Объединяет двух детей из узла по указанному индексу в одного ребёнка
     char mergeChildren(BNode<T> *, unsigned);
 
-    // Makes sure the child of a node at a specified index has >= minDegree items.
+    // Проверка того, что количество детей узла >= minDegree
     char fixChildSize(BNode<T> *, unsigned);
 
-    // Recursively prints a subtree.
+    // Рекурсия, принт поддерева
     void printNode(BNode<T> *, unsigned);
 
-    // Root node.
+    // Корневой узел
     BNode<T> *root;
 
-    // Comparison function used for managing element placement.
+    // Функция сравнения, позволяющая организовавать расположение элементов
     bool (*lessThan)(T, T);
 
-    // Function used to print items in the tree.
+    // Функция принта элементов в дереве
     void (*printKey)(T);
 
-    // Minimum degree of the tree.
+    // Минимальная степень дерева
     unsigned minDegree;
   };
 
