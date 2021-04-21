@@ -5,6 +5,15 @@
 #include <stdlib.h>
 #include <utility>
 #include <stdio.h>
+#include <iostream>
+#include <math.h>
+#include "ctime"
+#include <iomanip>
+#include <string.h>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <functional>
 
 using namespace std;
 
@@ -14,26 +23,36 @@ namespace itis {
 #define MODIFIED_NOT_ROOT 1
 #define NOT_MODIFIED 0
 
-  template<typename T>
-  BTree<T>::BTree(unsigned t, bool (*compare)(T, T), void (*printK)(T)) {
-    minDegree = t;
-    lessThan = compare;
-    root = (BNode<T> *) malloc(sizeof(BNode<T>));
-    initializeNode(root);
-    root->leaf = true;
-    printKey = printK;
+  bool compareInt(int a, int b) {
+    return a < b;
   }
 
-  template<typename T>
-  BTree<T>::~BTree<T>() {
+  void printK(int a) {
+    printf(reinterpret_cast<const char *>(a));
+  }
+
+  BTree::BTree(unsigned t) {
+    minDegree = t;
+    bool (*ptComp)(int, int) = NULL;
+    ptComp = &compareInt;
+
+    void (*print)(int) = NULL;
+    print = &printK;
+    lessThan = ptComp;
+    root = (BNode *) malloc(sizeof(BNode));
+    initializeNode(root);
+    root->leaf = true;
+    printKey = print;
+  }
+
+  BTree::~BTree() {
     freeNode(root);
   }
 
-  template<typename T>
-  void BTree<T>::insert(T k) {
+  void BTree::insert(int k) {
 
     if (root->size == 2 * minDegree - 1) {
-      BNode<T> *newRoot = (BNode<T> *) malloc(sizeof(BNode<T>));
+      BNode *newRoot = (BNode *) malloc(sizeof(BNode));
       initializeNode(newRoot);
       newRoot->leaf = false;
       newRoot->child[0] = root;
@@ -41,7 +60,7 @@ namespace itis {
       splitChild(newRoot, 0);
     }
 
-    BNode<T> *curr = root;
+    BNode *curr = root;
     while (!curr->leaf) {
 
       int index = curr->size - 1;
@@ -62,21 +81,20 @@ namespace itis {
     nodeInsert(curr, k);
   }
 
-  template<typename T>
-  T BTree<T>::remove(T k) {
-    BNode<T> *curr = root;
+  int BTree::remove(int k) {
+    BNode *curr = root;
     while (true) {
       unsigned i = findIndex(curr, k);
 
       if (i < curr->size && !(lessThan(curr->key[i], k) || lessThan(k, curr->key[i]))) {
-        T toReturn = curr->key[i];
+        int toReturn = curr->key[i];
         if (curr->leaf) {
           nodeDelete(curr, i);
         }
 
         else {
-          BNode<T> *leftKid = curr->child[i];
-          BNode<T> *rightKid = curr->child[i + 1];
+          BNode *leftKid = curr->child[i];
+          BNode *rightKid = curr->child[i + 1];
 
           if (leftKid->size >= minDegree) {
             while (!(leftKid->leaf)) {
@@ -119,21 +137,20 @@ namespace itis {
     }
   }
 
-  template<typename T>
-  pair<BNode<T> *, unsigned> BTree<T>::search(T k) {
+  pair<BNode *, unsigned> BTree::search(int k) {
 
-    BNode<T> *x = root;
+    BNode *x = root;
 
     while (true) {
 
       unsigned i = findIndex(x, k);
 
       if (i < x->size && !(lessThan(k, x->key[i]) || lessThan(x->key[i], k))) {
-        return pair<BNode<T> *, unsigned>(x, i);
+        return pair<BNode *, unsigned>(x, i);
       }
 
       else if (x->leaf) {
-        return pair<BNode<T> *, unsigned>(NULL, 0);
+        return pair<BNode *, unsigned>(NULL, 0);
       }
 
       else {
@@ -142,17 +159,15 @@ namespace itis {
     }
   }
 
-  template<typename T>
-  T BTree<T>::searchKey(T k) {
-    pair<BNode<T> *, unsigned> node = search(k);
+  int BTree::searchKey(int k) {
+    pair<BNode *, unsigned> node = search(k);
     if (node.first == NULL) {
       throw(BTREE_EXCEPTION) SEARCH_KEY_NOT_FOUND;
     }
     return node.first->key[node.second];
   }
 
-  template<typename T>
-  void BTree<T>::print() {
+  void BTree::print() {
     if (printKey != NULL && root != NULL) {
       printf("\n");
       printNode(root, 0);
@@ -160,15 +175,13 @@ namespace itis {
     }
   }
 
-  template<typename T>
-  void BTree<T>::initializeNode(BNode<T> *x) {
+  void BTree::initializeNode(BNode *x) {
     x->size = 0;
-    x->key = (T *) malloc((2 * minDegree - 1) * sizeof(T));
-    x->child = (BNode<T> **) malloc(2 * minDegree * sizeof(BNode<T> *));
+    x->key = (int *) malloc((2 * minDegree - 1) * sizeof(int));
+    x->child = (BNode **) malloc(2 * minDegree * sizeof(BNode *));
   }
 
-  template<typename T>
-  void BTree<T>::freeNode(BNode<T> *x) {
+  void BTree::freeNode(BNode *x) {
     if (!x->leaf) {
       for (unsigned i = 0; i <= x->size; i++) {
         freeNode(x->child[i]);
@@ -179,8 +192,7 @@ namespace itis {
     free(x);
   }
 
-  template<typename T>
-  unsigned BTree<T>::findIndex(BNode<T> *x, T k) {
+  unsigned BTree::findIndex(BNode *x, int k) {
     unsigned i = 0;
     while (i < x->size && lessThan(x->key[i], k)) {
       i++;
@@ -188,8 +200,7 @@ namespace itis {
     return i;
   }
 
-  template<typename T>
-  unsigned BTree<T>::nodeInsert(BNode<T> *x, T k) {
+  unsigned BTree::nodeInsert(BNode *x, int k) {
     int index;
 
     for (index = x->size; index > 0 && lessThan(k, x->key[index - 1]); index--) {
@@ -204,10 +215,9 @@ namespace itis {
     return static_cast<unsigned int>(index);
   }
 
-  template<typename T>
-  T BTree<T>::nodeDelete(BNode<T> *x, unsigned index) {
+  int BTree::nodeDelete(BNode *x, unsigned index) {
 
-    T toReturn = x->key[index];
+    int toReturn = x->key[index];
 
     x->size--;
     while (index < x->size) {
@@ -218,11 +228,10 @@ namespace itis {
     return toReturn;
   }
 
-  template<typename T>
-  void BTree<T>::splitChild(BNode<T> *x, int i) {
+  void BTree::splitChild(BNode *x, int i) {
 
-    BNode<T> *toSplit = x->child[i];
-    BNode<T> *newNode = (BNode<T> *) malloc(sizeof(BNode<T>));
+    BNode *toSplit = x->child[i];
+    BNode *newNode = (BNode *) malloc(sizeof(BNode));
     initializeNode(newNode);
     newNode->leaf = toSplit->leaf;
     newNode->size = minDegree - 1;
@@ -241,11 +250,10 @@ namespace itis {
     x->child[i + 1] = newNode;
   }
 
-  template<typename T>
-  char BTree<T>::mergeChildren(BNode<T> *parent, unsigned i) {
+  char BTree::mergeChildren(BNode *parent, unsigned i) {
 
-    BNode<T> *leftKid = parent->child[i];
-    BNode<T> *rightKid = parent->child[i + 1];
+    BNode *leftKid = parent->child[i];
+    BNode *rightKid = parent->child[i + 1];
 
     leftKid->key[leftKid->size] = nodeDelete(parent, i);
     unsigned j = ++(leftKid->size);
@@ -272,14 +280,13 @@ namespace itis {
     return MODIFIED_NOT_ROOT;
   }
 
-  template<typename T>
-  char BTree<T>::fixChildSize(BNode<T> *parent, unsigned index) {
-    BNode<T> *kid = parent->child[index];
+  char BTree::fixChildSize(BNode *parent, unsigned index) {
+    BNode *kid = parent->child[index];
 
     if (kid->size < minDegree) {
 
       if (index != 0 && parent->child[index - 1]->size >= minDegree) {
-        BNode<T> *leftKid = parent->child[index - 1];
+        BNode *leftKid = parent->child[index - 1];
 
         for (unsigned i = nodeInsert(kid, parent->key[index - 1]); i != 0; i--) {
           kid->child[i] = kid->child[i - 1];
@@ -289,7 +296,7 @@ namespace itis {
       }
 
       else if (index != parent->size && parent->child[index + 1]->size >= minDegree) {
-        BNode<T> *rightKid = parent->child[index + 1];
+        BNode *rightKid = parent->child[index + 1];
         nodeInsert(kid, parent->key[index]);
         kid->child[kid->size] = rightKid->child[0];
         rightKid->child[0] = rightKid->child[1];
@@ -307,8 +314,7 @@ namespace itis {
     return NOT_MODIFIED;
   }
 
-  template<typename T>
-  void BTree<T>::printNode(BNode<T> *node, unsigned tab) {
+  void BTree::printNode(BNode *node, unsigned tab) {
 
     for (unsigned i = 0; i < tab; i++) {
       printf("\t");
@@ -328,4 +334,43 @@ namespace itis {
     }
   }
 
+  vector<int> split(const string &s, char delimiter) {
+    vector<int> tokens;
+    string token;
+    istringstream tokenStream(s);
+    while (getline(tokenStream, token, delimiter)) {
+      tokens.push_back(stoi(token));
+    }
+    return tokens;
+  }
+
+  string absolutePathToInputFile =
+      "C:\\Users\\hasis\\CLionProjects\\semester-work-b-tree\\src\\input.txt";  // absolute path to file
+  string process_data() {
+    ifstream file(absolutePathToInputFile);
+    string result = "";
+    string line;
+
+    while (getline(file, line)) {
+      // create structure here
+      BTree *btree = new BTree(2);
+
+      vector<int> intValues = split(line, ' ');    // splitting by delimiter and creating vector with int values
+      result = to_string(intValues.size()) + ",";  // amount of elements. "," - delimiter
+      double startTime = clock();
+      // here is executing tests
+      btree->insert(5);
+      btree->search(5);
+      btree->searchKey(5);
+      btree->remove(5);
+
+      double endTime = clock();
+      cout << result << to_string(endTime - startTime) + "\n";  // output elements count and test complition time
+    }
+    file.close();
+    return result;
+  }
+
 }  // namespace itis
+
+// namespace itis
