@@ -21,10 +21,10 @@ namespace parser {
     return tokens;
   }
 
-  string absolutePathToInputFile = "C:\\Users\\hasis\\CLionProjects\\semester-work-b-tree\\src\\input.txt";
+  string pathToInputFile = "\\semester-work-b-tree\\src\\input.txt";
 
   string process_data() {
-    ifstream file(absolutePathToInputFile);
+    ifstream file(pathToInputFile);
     string result;
     string line;
 
