@@ -1,19 +1,9 @@
 #include "data_structure.hpp"
 
-#pragma once
-
 #include <stdlib.h>
 #include <utility>
 #include <stdio.h>
 #include <iostream>
-#include <math.h>
-#include "ctime"
-#include <iomanip>
-#include <string.h>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <functional>
 
 using namespace std;
 
@@ -23,26 +13,11 @@ namespace itis {
 #define MODIFIED_NOT_ROOT 1
 #define NOT_MODIFIED 0
 
-  bool compareInt(int a, int b) {
-    return a < b;
-  }
-
-  void printK(int a) {
-    printf(reinterpret_cast<const char *>(a));
-  }
-
   BTree::BTree(unsigned t) {
     minDegree = t;
-    bool (*ptComp)(int, int) = NULL;
-    ptComp = &compareInt;
-
-    void (*print)(int) = NULL;
-    print = &printK;
-    lessThan = ptComp;
     root = (BNode *) malloc(sizeof(BNode));
     initializeNode(root);
     root->leaf = true;
-    printKey = print;
   }
 
   BTree::~BTree() {
@@ -168,11 +143,15 @@ namespace itis {
   }
 
   void BTree::print() {
-    if (printKey != NULL && root != NULL) {
+    if (root != NULL) {
       printf("\n");
       printNode(root, 0);
       printf("\n");
     }
+  }
+
+  void BTree::printKey(int a) {
+    printf(reinterpret_cast<const char *>(a));
   }
 
   void BTree::initializeNode(BNode *x) {
@@ -334,43 +313,7 @@ namespace itis {
     }
   }
 
-  vector<int> split(const string &s, char delimiter) {
-    vector<int> tokens;
-    string token;
-    istringstream tokenStream(s);
-    while (getline(tokenStream, token, delimiter)) {
-      tokens.push_back(stoi(token));
-    }
-    return tokens;
+  bool BTree::lessThan(int a, int b) {
+    return a < b;
   }
-
-  string absolutePathToInputFile =
-      "C:\\Users\\hasis\\CLionProjects\\semester-work-b-tree\\src\\input.txt";  // absolute path to file
-  string process_data() {
-    ifstream file(absolutePathToInputFile);
-    string result = "";
-    string line;
-
-    while (getline(file, line)) {
-      // create structure here
-      BTree *btree = new BTree(2);
-
-      vector<int> intValues = split(line, ' ');    // splitting by delimiter and creating vector with int values
-      result = to_string(intValues.size()) + ",";  // amount of elements. "," - delimiter
-      double startTime = clock();
-      // here is executing tests
-      btree->insert(5);
-      btree->search(5);
-      btree->searchKey(5);
-      btree->remove(5);
-
-      double endTime = clock();
-      cout << result << to_string(endTime - startTime) + "\n";  // output elements count and test complition time
-    }
-    file.close();
-    return result;
-  }
-
 }  // namespace itis
-
-// namespace itis

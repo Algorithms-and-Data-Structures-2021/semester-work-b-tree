@@ -4,11 +4,10 @@
 #include <unordered_set>
 namespace itis {
 
-#define NULL 0
 #define SEARCH_KEY_NOT_FOUND 's'
 #define REMOVE_KEY_NOT_FOUND 'r'
 
-  // Структура для узлов в нашем дереве
+  /// Структура для узлов в нашем дереве
 
   struct BNode {
     BNode **child;  // Массив указателей на детей
@@ -22,11 +21,9 @@ namespace itis {
   class BTree {
    public:
     // Конструктор
-    // Первый параметр - минимальная степень дерева
-    // Второй - функция сравнения ключей
-    // Третий - функция, которая принтит ключи
+    // Параметр - минимальная степень дерева
     // Сложность O(1)
-    BTree(unsigned);
+    explicit BTree(unsigned);
 
     // Деструктор
     // Сложность O(n)
@@ -85,11 +82,11 @@ namespace itis {
     // Корневой узел
     BNode *root;
 
-    // Функция сравнения, позволяющая организовавать расположение элементов
-    bool (*lessThan)(int, int);
+    // Сравнение, позволяющее организовавать расположение элементов
+    bool lessThan(int, int);
 
-    // Функция принта элементов в дереве
-    void (*printKey)(int);
+    // Вывод элементов в дереве
+    void printKey(int);
 
     // Минимальная степень дерева
     unsigned minDegree;

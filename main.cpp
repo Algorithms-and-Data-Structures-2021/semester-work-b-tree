@@ -1,12 +1,13 @@
 #include <iostream>
+#include <parser.hpp>
 
 #include "data_structure.hpp"
 
 using namespace std;
+using namespace itis;
 
-int main(int argc, char *argv[]) {
-  for (int index = 0; index < argc; index++) {
-    cout << index << ": " << argv[index] << endl;
-  }
+int main() {
+  auto *parser = new Parser();
+  parser->process_data();
   return 0;
 }
