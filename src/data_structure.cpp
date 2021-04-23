@@ -15,7 +15,7 @@ namespace itis {
 
   BTree::BTree(unsigned t) {
     minDegree = t;
-    root = (BNode *) malloc(sizeof(BNode));
+    root = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
     initializeNode(root);
     root->leaf = true;
   }
@@ -27,7 +27,7 @@ namespace itis {
   void BTree::insert(int k) {
 
     if (root->size == 2 * minDegree - 1) {
-      BNode *newRoot = (BNode *) malloc(sizeof(BNode));
+      BNode *newRoot = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
       initializeNode(newRoot);
       newRoot->leaf = false;
       newRoot->child[0] = root;
@@ -38,7 +38,7 @@ namespace itis {
     BNode *curr = root;
     while (!curr->leaf) {
 
-      int index = curr->size - 1;
+      int index = static_cast<int>(curr->size - 1);
       while (index >= 0 && lessThan(k, curr->key[index])) {
         index--;
       }
@@ -156,8 +156,8 @@ namespace itis {
 
   void BTree::initializeNode(BNode *x) {
     x->size = 0;
-    x->key = (int *) malloc((2 * minDegree - 1) * sizeof(int));
-    x->child = (BNode **) malloc(2 * minDegree * sizeof(BNode *));
+    x->key = reinterpret_cast<int *>(malloc((2 * minDegree - 1) * sizeof(int)));
+    x->child = reinterpret_cast<BNode **>(malloc(2 * minDegree * sizeof(BNode *)));
   }
 
   void BTree::freeNode(BNode *x) {
@@ -182,7 +182,7 @@ namespace itis {
   unsigned BTree::nodeInsert(BNode *x, int k) {
     int index;
 
-    for (index = x->size; index > 0 && lessThan(k, x->key[index - 1]); index--) {
+    for (index = static_cast<int>(x->size); index > 0 && lessThan(k, x->key[index - 1]); index--) {
       x->key[index] = x->key[index - 1];
       x->child[index + 1] = x->child[index];
     }
@@ -210,7 +210,7 @@ namespace itis {
   void BTree::splitChild(BNode *x, int i) {
 
     BNode *toSplit = x->child[i];
-    BNode *newNode = (BNode *) malloc(sizeof(BNode));
+    BNode *newNode = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
     initializeNode(newNode);
     newNode->leaf = toSplit->leaf;
     newNode->size = minDegree - 1;

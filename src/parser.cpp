@@ -1,5 +1,4 @@
 #include <utility>
-#include <iostream>
 #include "ctime"
 #include <fstream>
 #include <sstream>
@@ -22,7 +21,7 @@ vector<int> split(const std::string &s, char delimiter) {
   return tokens;
 }
 
-string pathToInputFile = "src\\input.txt";
+string pathToInputFile = "C:\\Users\\007\\Desktop\\Vigvamcev\\semester-work-b-tree\\src\\input.txt";
 
 std::string Parser::process_data() {
   ifstream file(pathToInputFile);
@@ -34,14 +33,39 @@ std::string Parser::process_data() {
     auto *btree = new BTree(2);
 
     vector<int> intValues = split(line, ' ');
-    result = to_string(intValues.size()) + ",";
+    result = to_string(intValues.size()) + " elements";
+
+    //insert
     double startTime = clock();
-    // here is executing tests
     for (int value : intValues) {
       btree->insert(value);
     }
     double endTime = clock();
-    cout << result << to_string(endTime - startTime) + "\n";
+    cout << "insert :" << to_string(endTime - startTime) + " ms\n";
+
+    //search
+    startTime = clock();
+    for (int value : intValues) {
+      btree->search(value);
+    }
+    endTime = clock();
+    cout << "search :" << to_string(endTime - startTime) + " ms\n";
+
+    //searchKey
+    startTime = clock();
+    for (int value : intValues) {
+      btree->searchKey(value);
+    }
+    endTime = clock();
+    cout << "searchKey :" << to_string(endTime - startTime) + " ms\n";
+
+    //remove
+    startTime = clock();
+    for (int value : intValues) {
+      btree->remove(value);
+    }
+    endTime = clock();
+    cout << "remove :" << to_string(endTime - startTime) + " ms\n";
   }
   file.close();
   return result;
