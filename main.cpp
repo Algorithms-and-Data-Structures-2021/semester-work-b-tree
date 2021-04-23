@@ -1,13 +1,11 @@
 #include <iostream>
 #include <parser.hpp>
 
-#include "data_structure.hpp"
-
 using namespace std;
-using namespace itis;
 
 int main() {
   auto *parser = new Parser();
-  parser->process_data();
+  string a = parser->process_data();
+  cout << a;
   return 0;
 }
