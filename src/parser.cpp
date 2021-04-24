@@ -21,12 +21,14 @@ vector<int> split(const std::string &s, char delimiter) {
   return tokens;
 }
 
-string pathToInputFile = "C:\\Users\\007\\Desktop\\Vigvamcev\\semester-work-b-tree\\src\\input.txt";
-
-std::string Parser::process_data() {
+std::string Parser::process_data(const string &pathToInputFile) {
   ifstream file(pathToInputFile);
   string result;
   string line;
+  vector<float> insert;
+  vector<float> search;
+  vector<float> searchKey;
+  vector<float> remove;
 
   while (getline(file, line)) {
     // create structure here
@@ -34,13 +36,14 @@ std::string Parser::process_data() {
 
     vector<int> intValues = split(line, ' ');
     result = to_string(intValues.size()) + " elements";
-
+    cout << result << "\n";
     //insert
     double startTime = clock();
     for (int value : intValues) {
       btree->insert(value);
     }
     double endTime = clock();
+    insert.emplace_back(endTime - startTime);
     cout << "insert :" << to_string(endTime - startTime) + " ms\n";
 
     //search
@@ -49,6 +52,7 @@ std::string Parser::process_data() {
       btree->search(value);
     }
     endTime = clock();
+    search.emplace_back(endTime - startTime);
     cout << "search :" << to_string(endTime - startTime) + " ms\n";
 
     //searchKey
@@ -57,6 +61,7 @@ std::string Parser::process_data() {
       btree->searchKey(value);
     }
     endTime = clock();
+    searchKey.emplace_back(endTime - startTime);
     cout << "searchKey :" << to_string(endTime - startTime) + " ms\n";
 
     //remove
@@ -65,8 +70,38 @@ std::string Parser::process_data() {
       btree->remove(value);
     }
     endTime = clock();
+    remove.emplace_back(endTime - startTime);
     cout << "remove :" << to_string(endTime - startTime) + " ms\n";
   }
   file.close();
+
+  float average = 0;
+  for (float f : insert) {
+    average += f;
+  }
+  average /= static_cast<float>(insert.size());
+  cout << "\nAverage insert: " << average << " ms\n";
+
+  average = 0;
+  for (float f : search) {
+    average += f;
+  }
+  average /= static_cast<float>(search.size());
+  cout << "Average search: " << average << " ms\n";
+
+  average = 0;
+  for (float f : searchKey) {
+    average += f;
+  }
+  average /= static_cast<float>(searchKey.size());
+  cout << "Average searchKey: " << average << " ms\n";
+
+  average = 0;
+  for (float f : remove) {
+    average += f;
+  }
+  average /= static_cast<float>(remove.size());
+  cout << "Average remove: " << average << " ms\n";
+
   return result;
 }

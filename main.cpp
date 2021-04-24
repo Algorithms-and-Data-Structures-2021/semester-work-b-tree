@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
   cout << "Time test:\n";
-  string a = Parser::process_data();
-  cout << a;
+  string path = "C:\\Users\\007\\Desktop\\Vigvamcev\\semester-work-b-tree\\tests\\1000000.csv";
+  string a = Parser::process_data(path);
   return 0;
 }
