@@ -2,12 +2,10 @@ from random import randint
 
 
 def values_generator(set_quantity: int, min_value: int = 0, max_value: int = 100000000,
-                     min_elements_amount: int = 1000000, max_elements_amount: int = 10):
-    """Function to generate values for tests"""
+                     min_elements_amount: int = 1000):
     for _ in range(set_quantity):
         elements_quantity = min_elements_amount
-        # //elements_quantity = randint(min_elements_amount, max_elements_amount)
-        with open("1000000.csv", "a") as inp:
+        with open("01/1000.csv", "a") as inp:
             for i in range(elements_quantity):
                 value = randint(min_value, max_value)
                 inp.write(str(value) + " ")
@@ -15,6 +13,4 @@ def values_generator(set_quantity: int, min_value: int = 0, max_value: int = 100
 
 
 if __name__ == '__main__':
-    help_message = """"""
-    set_quantity = int(input("Сколько наборов будем генерировать?/How much set quantities we will generate?"))
-    values_generator(set_quantity)
+    values_generator(1)
