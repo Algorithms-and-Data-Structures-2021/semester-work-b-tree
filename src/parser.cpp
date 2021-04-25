@@ -22,7 +22,7 @@ vector<int> split(const std::string &s, char delimiter) {
 
 }
 
-void Parser::process_data(const string &pathToInputFile, const string &pathToResult, int iterations) {
+void Parser::process_data(const string pathToInputFile, const string pathToResult, int iterations) {
   string line;
   vector<float> insert;
   vector<float> search;
@@ -36,7 +36,6 @@ void Parser::process_data(const string &pathToInputFile, const string &pathToRes
 
     while (getline(file, line)) {
       auto *btree = new BTree(2);
-
 
       vector<int> intValues = split(line, ' ');
 
