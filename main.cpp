@@ -8,6 +8,7 @@ int main() {
   string pathToResult;
   int iterations = 1;
 
+
   cout << "Enter path to file with tests:\n";
   cin >> pathToTests;
   cout << "Enter path to results file:\n";

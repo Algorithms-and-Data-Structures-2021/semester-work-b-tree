@@ -116,6 +116,7 @@ namespace itis {
 
     BNode *x = root;
 
+
     while (true) {
 
       unsigned i = findIndex(x, k);
