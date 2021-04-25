@@ -4,6 +4,7 @@
 using namespace std;
 
 int main() {
+
   string pathToTests;
   string pathToResult;
   int iterations = 1;

@@ -155,6 +155,7 @@ namespace itis {
     printf(reinterpret_cast<const char *>(a));
   }
 
+
   void BTree::initializeNode(BNode *x) {
     x->size = 0;
     x->key = reinterpret_cast<int *>(malloc((2 * minDegree - 1) * sizeof(int)));

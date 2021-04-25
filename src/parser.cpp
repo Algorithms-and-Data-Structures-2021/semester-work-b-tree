@@ -13,6 +13,7 @@ using namespace itis;
 
 vector<int> split(const std::string &s, char delimiter) {
   vector<int> tokens;
+
   string token;
   istringstream tokenStream(s);
   while (getline(tokenStream, token, delimiter)) {

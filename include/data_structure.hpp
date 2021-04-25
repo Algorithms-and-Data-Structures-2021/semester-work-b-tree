@@ -55,6 +55,7 @@ namespace itis {
     // Нужна для инициализации узлов
     void initializeNode(BNode *);
 
+
     // Рекурсивная функция, используемая деструктором
     void freeNode(BNode *);
 
