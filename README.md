@@ -81,15 +81,10 @@ cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && cmake --config RelWithDebInfo --bu
 формате [comma-seperated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values):
 
 ```shell
-# переход в папку генерации набора данных
-cd dataset
 
 # запуск Python-скрипта
-python generate_csv_bench_dataset.py --samples 1000 <output> [args ...]
+python generator.py [args ...]
 ```
-
-- `--samples` - количество генерируемых элементов;
-- `<output>` - выходной файл и т.д.
 
 Тестовые данные представлены в CSV формате (см.
 [`dataset/data/dataset-example.csv`](dataset/data/dataset-example.csv)):
@@ -138,42 +133,16 @@ dataset/data/
 В файле с результатом замеры времени будут записаны следующим образом:
 
 insert search remove
-****   ****   ****
+100   100     100
+100   100     100
+100   100     100
+insert: 100
+search: 100
+remove: 100
 
 
-
-**Примечание**. Во избежание "захламления" репозитория большим объёмом данных рекомендуется указать ссылку на архив с
-набором данных, который при необходимости можно скачать по ссылке. Наборы данных должны находиться в папке семестровой
+Наборы данных находятся в папке семестровой
 работы на [Google Drive](https://drive.google.com/drive/folders/17-qridbMXFnz3E-6UjOj0WD1H0jWtpz3?usp=sharing).
-
-##### Список контрольных тестов
-
-| Название                  | Описание                                | Метрики         |
-| :---                      | ---                                     | :---            |
-| `random_search_benchmark` | поиск элементов по случайному индексу   | _время_         |
-| `add_benchmark`           | добавление элементов в структуру данных | _время, память_ |
-| ...                       | ...                                     | ...             |
-
-##### Примеры запуска
-
-```shell
-./benchmark <input> <output> --trials 50
-```
-
-- `<input>` - входной файл с набором данных в формате CSV;
-- `<output>` - выходной файл с результатами контрольного теста;
-- `--trials` - количество прогонов на наборе данных и т.д.
-
-Добавление 10000 случайных элементов в структуру данных (повторить операцию 50 раз и вычислить среднее время работы и
-потребляемую память):
-
-```
-./add_benchmark.exe ../dataset/data/add/10000.csv metrics.txt --trials 50
-``` 
-
-где `<input> = ../dataset/data/add/10000.csv` и `<output> = metrics.txt`.
-
-**Примечание**. Файл с метриками не обязателен, можете выводить данные в стандартный поток вывода (т.е. консоль).
 
 ## Источники
 
