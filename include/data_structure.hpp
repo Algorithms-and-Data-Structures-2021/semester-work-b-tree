@@ -10,10 +10,10 @@ namespace itis {
   /// Структура для узлов в нашем дереве
 
   struct BNode {
-    BNode **child;  // Массив указателей на детей
-    int *key;       // Массив ключей
-    unsigned size;  // Количество ключей
-    bool leaf;      // Является ли узел листом
+    BNode **children;  // Массив указателей на детей
+    int *key;          // Массив ключей
+    unsigned size;     // Количество ключей
+    bool isLeaf;       // Является ли узел листом
   };
 
   typedef char BTREE_EXCEPTION;
@@ -59,13 +59,13 @@ namespace itis {
     void freeNode(BNode *);
 
     // Находит индекс ключа в узле
-    unsigned findIndex(BNode *, int);
+    unsigned findIndexOfKeyInNode(BNode *, int);
 
     // Добавляет ключ в узел
-    unsigned nodeInsert(BNode *, int);
+    unsigned insertKeyToNode(BNode *, int);
 
     // Удаляет ключ по указанному индексу
-    int nodeDelete(BNode *, unsigned);
+    int deleteKeyInNode(BNode *, unsigned);
 
     // Функция для разделения заполненных узлов
     void splitChild(BNode *, int);
