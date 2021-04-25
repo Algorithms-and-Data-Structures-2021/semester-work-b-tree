@@ -13,6 +13,7 @@ using namespace itis;
 
 vector<int> split(const std::string &s, char delimiter) {
   vector<int> tokens;
+
   string token;
   istringstream tokenStream(s);
   while (getline(tokenStream, token, delimiter)) {
@@ -35,7 +36,6 @@ void Parser::process_data(const string &pathToInputFile, const string &pathToRes
 
     while (getline(file, line)) {
       auto *btree = new BTree(2);
-
 
       vector<int> intValues = split(line, ' ');
 

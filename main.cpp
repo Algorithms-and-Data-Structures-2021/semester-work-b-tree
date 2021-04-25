@@ -4,9 +4,11 @@
 using namespace std;
 
 int main() {
+
   string pathToTests;
   string pathToResult;
   int iterations = 1;
+
 
   cout << "Enter path to file with tests:\n";
   cin >> pathToTests;
