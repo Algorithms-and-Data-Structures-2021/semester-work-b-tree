@@ -4,10 +4,17 @@
 using namespace std;
 
 int main() {
-  string path;
-  cout << "Enter path to file: ";
-  cin >> path;
-  cout << "Time test:\n";
-  string a = Parser::process_data(path);
+  string pathToTests;
+  string pathToResult;
+  int iterations = 1;
+
+  cout << "Enter path to file with tests:\n";
+  cin >> pathToTests;
+  cout << "Enter path to results file:\n";
+  cin >> pathToResult;
+  cout << "Enter iterations:\n";
+  cin >> iterations;
+
+  Parser::process_data(pathToTests, pathToResult, iterations);
   return 0;
 }

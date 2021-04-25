@@ -5,7 +5,7 @@ def values_generator(set_quantity: int, min_value: int = 0, max_value: int = 100
                      min_elements_amount: int = 1000):
     for _ in range(set_quantity):
         elements_quantity = min_elements_amount
-        with open("01/1000.csv", "a") as inp:
+        with open("1/1000.csv", "a") as inp:
             for i in range(elements_quantity):
                 value = randint(min_value, max_value)
                 inp.write(str(value) + " ")

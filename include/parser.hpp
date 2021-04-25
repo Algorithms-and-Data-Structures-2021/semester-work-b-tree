@@ -2,5 +2,5 @@
 #include <unordered_set>
 class Parser {
  public:
-  static std::string process_data(const std::string& pathToInputFile);
+  static void process_data(const std::string &pathToInputFile, const std::string &pathToResult, int iterations);
 };
