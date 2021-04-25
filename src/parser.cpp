@@ -20,10 +20,9 @@ vector<int> split(const std::string &s, char delimiter) {
     tokens.push_back(stoi(token));
   }
   return tokens;
-
 }
 
-void Parser::process_data(const string pathToInputFile, const string pathToResult, int iterations) {
+void Parser::process_data(const string &pathToInputFile, const string &pathToResult, int iterations) {
   string line;
   vector<float> insert;
   vector<float> search;

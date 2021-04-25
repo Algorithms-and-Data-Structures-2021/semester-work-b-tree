@@ -1,8 +1,8 @@
 #include "data_structure.hpp"
 
-#include <cstdlib>
+#include <stdlib.h>
 #include <utility>
-#include <cstdio>
+#include <stdio.h>
 #include <iostream>
 
 using namespace std;
@@ -17,7 +17,7 @@ namespace itis {
     minDegree = t;
     root = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
     initializeNode(root);
-    root->isLeaf = true;
+    root->leaf = true;
   }
 
   BTree::~BTree() {
@@ -29,14 +29,14 @@ namespace itis {
     if (root->size == 2 * minDegree - 1) {
       BNode *newRoot = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
       initializeNode(newRoot);
-      newRoot->isLeaf = false;
-      newRoot->children[0] = root;
+      newRoot->leaf = false;
+      newRoot->child[0] = root;
       root = newRoot;
       splitChild(newRoot, 0);
     }
 
     BNode *curr = root;
-    while (!curr->isLeaf) {
+    while (!curr->leaf) {
 
       int index = static_cast<int>(curr->size - 1);
       while (index >= 0 && lessThan(k, curr->key[index])) {
@@ -44,47 +44,47 @@ namespace itis {
       }
       index++;
 
-      if (curr->children[index]->size == 2 * minDegree - 1) {
+      if (curr->child[index]->size == 2 * minDegree - 1) {
         splitChild(curr, index);
         if (lessThan(curr->key[index], k)) {
           index++;
         }
       }
-      curr = curr->children[index];
+      curr = curr->child[index];
     }
 
-    insertKeyToNode(curr, k);
+    nodeInsert(curr, k);
   }
 
   int BTree::remove(int k) {
     BNode *curr = root;
     while (true) {
-      unsigned i = findIndexOfKeyInNode(curr, k);
+      unsigned i = findIndex(curr, k);
 
       if (i < curr->size && !(lessThan(curr->key[i], k) || lessThan(k, curr->key[i]))) {
         int toReturn = curr->key[i];
-        if (curr->isLeaf) {
-          deleteKeyInNode(curr, i);
+        if (curr->leaf) {
+          nodeDelete(curr, i);
         }
 
         else {
-          BNode *leftKid = curr->children[i];
-          BNode *rightKid = curr->children[i + 1];
+          BNode *leftKid = curr->child[i];
+          BNode *rightKid = curr->child[i + 1];
 
           if (leftKid->size >= minDegree) {
-            while (!(leftKid->isLeaf)) {
+            while (!(leftKid->leaf)) {
               fixChildSize(leftKid, leftKid->size);
-              leftKid = leftKid->children[leftKid->size];
+              leftKid = leftKid->child[leftKid->size];
             }
-            curr->key[i] = deleteKeyInNode(leftKid, leftKid->size - 1);
+            curr->key[i] = nodeDelete(leftKid, leftKid->size - 1);
           }
 
           else if (rightKid->size >= minDegree) {
-            while (!(rightKid->isLeaf)) {
+            while (!(rightKid->leaf)) {
               fixChildSize(rightKid, 0);
-              rightKid = rightKid->children[0];
+              rightKid = rightKid->child[0];
             }
-            curr->key[i] = deleteKeyInNode(rightKid, 0);
+            curr->key[i] = nodeDelete(rightKid, 0);
           }
 
           else {
@@ -98,7 +98,7 @@ namespace itis {
 
       else {
 
-        if (curr->isLeaf) {
+        if (curr->leaf) {
           throw(BTREE_EXCEPTION) REMOVE_KEY_NOT_FOUND;
         }
 
@@ -106,7 +106,7 @@ namespace itis {
         if (result == NEW_ROOT) {
           curr = root;
         } else {
-          curr = curr->children[findIndexOfKeyInNode(curr, k)];
+          curr = curr->child[findIndex(curr, k)];
         }
       }
     }
@@ -116,21 +116,20 @@ namespace itis {
 
     BNode *x = root;
 
-
     while (true) {
 
-      unsigned i = findIndexOfKeyInNode(x, k);
+      unsigned i = findIndex(x, k);
 
       if (i < x->size && !(lessThan(k, x->key[i]) || lessThan(x->key[i], k))) {
         return pair<BNode *, unsigned>(x, i);
       }
 
-      else if (x->isLeaf) {
+      else if (x->leaf) {
         return pair<BNode *, unsigned>(NULL, 0);
       }
 
       else {
-        x = x->children[i];
+        x = x->child[i];
       }
     }
   }
@@ -155,25 +154,24 @@ namespace itis {
     printf(reinterpret_cast<const char *>(a));
   }
 
-
   void BTree::initializeNode(BNode *x) {
     x->size = 0;
     x->key = reinterpret_cast<int *>(malloc((2 * minDegree - 1) * sizeof(int)));
-    x->children = reinterpret_cast<BNode **>(malloc(2 * minDegree * sizeof(BNode *)));
+    x->child = reinterpret_cast<BNode **>(malloc(2 * minDegree * sizeof(BNode *)));
   }
 
   void BTree::freeNode(BNode *x) {
-    if (!x->isLeaf) {
+    if (!x->leaf) {
       for (unsigned i = 0; i <= x->size; i++) {
-        freeNode(x->children[i]);
+        freeNode(x->child[i]);
       }
     }
-    free(x->children);
+    free(x->child);
     free(x->key);
     free(x);
   }
 
-  unsigned BTree::findIndexOfKeyInNode(BNode *x, int k) {
+  unsigned BTree::findIndex(BNode *x, int k) {
     unsigned i = 0;
     while (i < x->size && lessThan(x->key[i], k)) {
       i++;
@@ -181,29 +179,29 @@ namespace itis {
     return i;
   }
 
-  unsigned BTree::insertKeyToNode(BNode *x, int k) {
+  unsigned BTree::nodeInsert(BNode *x, int k) {
     int index;
 
     for (index = static_cast<int>(x->size); index > 0 && lessThan(k, x->key[index - 1]); index--) {
       x->key[index] = x->key[index - 1];
-      x->children[index + 1] = x->children[index];
+      x->child[index + 1] = x->child[index];
     }
 
-    x->children[index + 1] = x->children[index];
+    x->child[index + 1] = x->child[index];
     x->key[index] = k;
     x->size++;
 
     return static_cast<unsigned int>(index);
   }
 
-  int BTree::deleteKeyInNode(BNode *x, unsigned index) {
+  int BTree::nodeDelete(BNode *x, unsigned index) {
 
     int toReturn = x->key[index];
 
     x->size--;
     while (index < x->size) {
       x->key[index] = x->key[index + 1];
-      x->children[index + 1] = x->children[index + 2];
+      x->child[index + 1] = x->child[index + 2];
       index++;
     }
     return toReturn;
@@ -211,48 +209,48 @@ namespace itis {
 
   void BTree::splitChild(BNode *x, int i) {
 
-    BNode *toSplit = x->children[i];
+    BNode *toSplit = x->child[i];
     BNode *newNode = reinterpret_cast<BNode *>(malloc(sizeof(BNode)));
     initializeNode(newNode);
-    newNode->isLeaf = toSplit->isLeaf;
+    newNode->leaf = toSplit->leaf;
     newNode->size = minDegree - 1;
 
     for (unsigned j = 0; j < minDegree - 1; j++) {
       newNode->key[j] = toSplit->key[j + minDegree];
     }
-    if (!toSplit->isLeaf) {
+    if (!toSplit->leaf) {
       for (unsigned j = 0; j < minDegree; j++) {
-        newNode->children[j] = toSplit->children[j + minDegree];
+        newNode->child[j] = toSplit->child[j + minDegree];
       }
     }
     toSplit->size = minDegree - 1;
 
-    deleteKeyInNode(x, toSplit->key[minDegree - 1]);
-    x->children[i + 1] = newNode;
+    nodeInsert(x, toSplit->key[minDegree - 1]);
+    x->child[i + 1] = newNode;
   }
 
   char BTree::mergeChildren(BNode *parent, unsigned i) {
 
-    BNode *leftKid = parent->children[i];
-    BNode *rightKid = parent->children[i + 1];
+    BNode *leftKid = parent->child[i];
+    BNode *rightKid = parent->child[i + 1];
 
-    leftKid->key[leftKid->size] = deleteKeyInNode(parent, i);
+    leftKid->key[leftKid->size] = nodeDelete(parent, i);
     unsigned j = ++(leftKid->size);
 
     for (unsigned k = 0; k < rightKid->size; k++) {
       leftKid->key[j + k] = rightKid->key[k];
-      leftKid->children[j + k] = rightKid->children[k];
+      leftKid->child[j + k] = rightKid->child[k];
     }
     leftKid->size += rightKid->size;
-    leftKid->children[leftKid->size] = rightKid->children[rightKid->size];
+    leftKid->child[leftKid->size] = rightKid->child[rightKid->size];
 
-    free(rightKid->children);
+    free(rightKid->child);
     free(rightKid->key);
     free(rightKid);
 
     if (parent->size == 0) {
       root = leftKid;
-      free(parent->children);
+      free(parent->child);
       free(parent->key);
       free(parent);
       return NEW_ROOT;
@@ -262,26 +260,26 @@ namespace itis {
   }
 
   char BTree::fixChildSize(BNode *parent, unsigned index) {
-    BNode *kid = parent->children[index];
+    BNode *kid = parent->child[index];
 
     if (kid->size < minDegree) {
 
-      if (index != 0 && parent->children[index - 1]->size >= minDegree) {
-        BNode *leftKid = parent->children[index - 1];
+      if (index != 0 && parent->child[index - 1]->size >= minDegree) {
+        BNode *leftKid = parent->child[index - 1];
 
-        for (unsigned i = deleteKeyInNode(kid, parent->key[index - 1]); i != 0; i--) {
-          kid->children[i] = kid->children[i - 1];
+        for (unsigned i = nodeInsert(kid, parent->key[index - 1]); i != 0; i--) {
+          kid->child[i] = kid->child[i - 1];
         }
-        kid->children[0] = leftKid->children[leftKid->size];
-        parent->key[index - 1] = deleteKeyInNode(leftKid, leftKid->size - 1);
+        kid->child[0] = leftKid->child[leftKid->size];
+        parent->key[index - 1] = nodeDelete(leftKid, leftKid->size - 1);
       }
 
-      else if (index != parent->size && parent->children[index + 1]->size >= minDegree) {
-        BNode *rightKid = parent->children[index + 1];
-        deleteKeyInNode(kid, parent->key[index]);
-        kid->children[kid->size] = rightKid->children[0];
-        rightKid->children[0] = rightKid->children[1];
-        parent->key[index] = deleteKeyInNode(rightKid, 0);
+      else if (index != parent->size && parent->child[index + 1]->size >= minDegree) {
+        BNode *rightKid = parent->child[index + 1];
+        nodeInsert(kid, parent->key[index]);
+        kid->child[kid->size] = rightKid->child[0];
+        rightKid->child[0] = rightKid->child[1];
+        parent->key[index] = nodeDelete(rightKid, 0);
       }
 
       else if (index != 0) {
@@ -307,10 +305,10 @@ namespace itis {
     }
     printf("\n");
 
-    if (!node->isLeaf) {
+    if (!node->leaf) {
       tab++;
       for (unsigned i = 0; i <= node->size; i++) {
-        printNode(node->children[i], tab);
+        printNode(node->child[i], tab);
       }
     }
   }
