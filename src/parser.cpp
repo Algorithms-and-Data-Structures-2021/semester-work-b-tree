@@ -36,6 +36,7 @@ void Parser::process_data(const string &pathToInputFile, const string &pathToRes
     while (getline(file, line)) {
       auto *btree = new BTree(2);
 
+
       vector<int> intValues = split(line, ' ');
 
       //insert

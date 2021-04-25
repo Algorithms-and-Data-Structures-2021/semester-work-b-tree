@@ -12,6 +12,7 @@ int main() {
   cin >> pathToTests;
   cout << "Enter path to results file:\n";
   cin >> pathToResult;
+
   cout << "Enter iterations:\n";
   cin >> iterations;
 

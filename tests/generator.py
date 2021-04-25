@@ -12,5 +12,6 @@ def values_generator(set_quantity: int, min_value: int = 0, max_value: int = 100
             inp.write("\n")
 
 
+
 if __name__ == '__main__':
     values_generator(1)
