@@ -81,19 +81,43 @@ cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && cmake --config RelWithDebInfo --bu
 формате [comma-seperated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values):
 
 ```shell
-# переход в папку генерации набора данных
-cd dataset
 
 # запуск Python-скрипта
-python generate_csv_bench_dataset.py --samples 1000 <output> [args ...]
+python generator.py [args ...]
 ```
 
-- `--samples` - количество генерируемых элементов;
-- `<output>` - выходной фаЛйл и т.д.
+Тестовые данные представлены в CSV формате (см.
+[`dataset/data/dataset-example.csv`](dataset/data/dataset-example.csv)):
 
-Тестовые данные представлены в CSV формате 
+```csv
+id, full_name
+0, "Ramil Safin"
+1, "Bulat Abbyasov"
+...
+```
 
+**Примечание**. Для удобства запуска контрольных тестов рекомендуется организовывать данные в директориях, например:
 
+```shell
+dataset/data/
+  add/
+    1/
+      100.csv
+      ...
+      5000000.csv
+    2/ ...
+    3/ ...
+    ...
+    10/ ...
+  search/
+    1/
+      100.csv
+      ...
+      5000000.csv
+    ...
+    10/ ...
+  ...
+```
 
 По названию директории `/dataset/data/add` можно понять, что здесь хранятся наборы данных для контрольных тестов по
 **добавлению** элементов в структуру данных. Названия файлов `100.csv`. `5000000.csv` и т.д. хранят информацию о размере
@@ -109,40 +133,16 @@ python generate_csv_bench_dataset.py --samples 1000 <output> [args ...]
 В файле с результатом замеры времени будут записаны следующим образом:
 
 insert search remove
-****   ****   ****
+100   100     100
+100   100     100
+100   100     100
+insert: 100
+search: 100
+remove: 100
 
 
-
-**Примечание**. Наборы тестовых данных лежат на [Google Drive](https://drive.google.com/drive/u/0/folders/1ElAz6wTZIqUUSn14kZwf52VAWLm3LttN).
-
-##### Список контрольных тестов
-
-| Название                  | Описание                                | Метрики         |
-| :---                      | ---                                     | :---            |
-| `random_search_benchmark` | поиск элементов по случайному индексу   | _время_         |
-| `add_benchmark`           | добавление элементов в структуру данных | _время, память_ |
-| ...                       | ...                                     | ...             |
-
-##### Примеры запуска
-
-```shell
-./benchmark <input> <output> --trials 50
-```
-
-- `<input>` - входной файл с набором данных в формате CSV;
-- `<output>` - выходной файл с результатами контрольного теста;
-- `--trials` - количество прогонов на наборе данных и т.д.
-
-Добавление 10000 случайных элементов в структуру данных (повторить операцию 50 раз и вычислить среднее время работы и
-потребляемую память):
-
-```
-./add_benchmark.exe ../dataset/data/add/10000.csv metrics.txt --trials 50
-``` 
-
-где `<input> = ../dataset/data/add/10000.csv` и `<output> = metrics.txt`.
-
-**Примечание**. Файл с метриками не обязателен, можете выводить данные в стандартный поток вывода (т.е. консоль).
+Наборы данных находятся в папке семестровой
+работы на [Google Drive](https://drive.google.com/drive/folders/17-qridbMXFnz3E-6UjOj0WD1H0jWtpz3?usp=sharing).
 
 ## Источники
 
