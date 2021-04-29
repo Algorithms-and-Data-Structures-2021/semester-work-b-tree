@@ -81,12 +81,43 @@ cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && cmake --config RelWithDebInfo --bu
 формате [comma-seperated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values):
 
 ```shell
+
 # запуск Python-скрипта
 python generator.py [args ...]
 ```
 
-Тестовые данные представлены в CSV формате 
+Тестовые данные представлены в CSV формате (см.
+[`dataset/data/dataset-example.csv`](dataset/data/dataset-example.csv)):
 
+```csv
+id, full_name
+0, "Ramil Safin"
+1, "Bulat Abbyasov"
+...
+```
+
+**Примечание**. Для удобства запуска контрольных тестов рекомендуется организовывать данные в директориях, например:
+
+```shell
+dataset/data/
+  add/
+    1/
+      100.csv
+      ...
+      5000000.csv
+    2/ ...
+    3/ ...
+    ...
+    10/ ...
+  search/
+    1/
+      100.csv
+      ...
+      5000000.csv
+    ...
+    10/ ...
+  ...
+```
 
 По названию директории `/dataset/data/add` можно понять, что здесь хранятся наборы данных для контрольных тестов по
 **добавлению** элементов в структуру данных. Названия файлов `100.csv`. `5000000.csv` и т.д. хранят информацию о размере
@@ -111,7 +142,7 @@ remove: 100
 
 
 Наборы данных находятся в папке семестровой
-работы на [Google Drive](https://drive.google.com/drive/u/0/folders/1ElAz6wTZIqUUSn14kZwf52VAWLm3LttN).
+работы на [Google Drive](https://drive.google.com/drive/folders/17-qridbMXFnz3E-6UjOj0WD1H0jWtpz3?usp=sharing).
 
 ## Источники
 

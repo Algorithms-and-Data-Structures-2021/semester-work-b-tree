@@ -50,5 +50,5 @@ add_subdirectory(examples)
 add_subdirectory(benchmark)
 
 # === main (target) ===
-add_executable(main main.cpp)
+add_executable(main benchmark.cpp)
 target_link_libraries(main PRIVATE project_warnings ${PROJECT_NAME})
